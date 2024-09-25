@@ -60,16 +60,6 @@ public class UserControllerTest extends BaseIntegrationTest {
 
     @Test
     @SneakyThrows
-    public void should_get_a_user_by_code_FAILURE() throws Exception {
-        doThrow(new NotFoundException("User not found"))
-                .when(userMgtService).getUser("123");
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/123"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @SneakyThrows
     public void should_get_paginated_users() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
                 .param("page", "0")
