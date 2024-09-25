@@ -2,7 +2,6 @@ package com.tobipeter.giftdrop.db.repositories;
 
 import com.tobipeter.giftdrop.db.models.Window;
 import jakarta.transaction.Transactional;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +14,9 @@ import java.util.Optional;
 @Repository
 public interface WindowRepository extends JpaRepository<Window, Long> {
     Optional<Window> findByCode(String code);
+
+    @Query("SELECT w FROM Window w WHERE w.isNextWindow = true")
+    Optional<Window> getNextWindow();
 
     @Query("SELECT w FROM Window w WHERE w.active = true")
     Optional<Window> getCurrentWindow();

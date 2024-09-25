@@ -28,7 +28,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)-> requests
-                        .requestMatchers("/", "/home", "/api/v1/auth/**", "/api/v1/wish/share/**", "/api/v1/view/**").permitAll()
+                        .requestMatchers("/", "/home", "/api/v1/auth/**", "/api/v1/wish/share/**", "/api/v1/view/**", "/api/v1/windows/next", "/api/v1/windows/active").permitAll()
                         .requestMatchers("/api/v1/users/**").hasRole(Role.GIFT_DROP_USER.name())
                         .requestMatchers("/api/v1/admins/**").hasRole(Role.GIFT_DROP_ADMIN.name())
                         .anyRequest().authenticated()

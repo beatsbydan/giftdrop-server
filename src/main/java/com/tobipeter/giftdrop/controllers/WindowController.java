@@ -37,7 +37,10 @@ public class WindowController {
         return mgtService.getAllExpensesForAllWindows(page, size);
     }
 
-    @GetMapping("/current")
+    @GetMapping("/next")
+    public WindowResponseDto getCurrentWindow() throws NotFoundException {
+        return mgtService.getNextWindow();
+    }
 
     @GetMapping("/active")
     public WindowResponseDto getActiveWindow() throws NotFoundException{

@@ -27,14 +27,24 @@ public class WindowMgtService {
 
     public MessageResponse createWindow(CreateWindowDto request) throws DuplicateEntryException{
         boolean exists = windowService.isExists(request);
+        boolean hasNextWindow = windowService.hasNextWindow();
 
         if(exists){
-            throw new DuplicateEntryException("Window already exists");
+            throw new DuplicateEntryException("Window already exists.");
+        }
+        else if(hasNextWindow){
+            throw new DuplicateEntryException("Next window has already been created.");
         }
 
         windowService.save(toDbModel(request));
 
-        return new MessageResponse("Window created successfully.");
+        return new MessageResponse("Next window created successfully.");
+    }
+
+    public WindowResponseDto getNextWindow() throws NotFoundException {
+        Window window = windowService.getNextWindow();
+
+        return toResponse(window, null, null);
     }
 
     public Page<WindowExpensesResponse> getAllExpensesForAllWindows(int page, int size){
@@ -81,6 +91,7 @@ public class WindowMgtService {
         response.setTotalExpenses(window.getTotalExpenses());
         response.setTotalServiceFee(window.getTotalServiceFee());
         response.setTotalProductsFee(window.getTotalProductsFee());
+        response.setNextWindow(window.isNextWindow());
 
         if(mostRecentWindow != null && secondMostRecentWindow != null){
             RecentWindowResponseDto recentWindowResponse = getRecentWindowResponse(mostRecentWindow);

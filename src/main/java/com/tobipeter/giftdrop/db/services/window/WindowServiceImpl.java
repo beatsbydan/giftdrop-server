@@ -3,7 +3,6 @@ package com.tobipeter.giftdrop.db.services.window;
 import com.tobipeter.giftdrop.db.models.Window;
 import com.tobipeter.giftdrop.db.repositories.WindowRepository;
 import com.tobipeter.giftdrop.dtos.request.window.CreateWindowDto;
-import com.tobipeter.giftdrop.dtos.response.window.WindowResponseDto;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +28,12 @@ public class WindowServiceImpl implements WindowService{
     @Override
     public Page<Window> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public Window getNextWindow() throws NotFoundException {
+        return repository.getNextWindow()
+                .orElseThrow(() -> new NotFoundException("Window was not found."));
     }
 
     @Override
@@ -59,6 +64,11 @@ public class WindowServiceImpl implements WindowService{
         LocalDate end = LocalDate.parse(request.getEndDate(), DateTimeFormatter.ISO_LOCAL_DATE);
 
         return repository.existsByPeriod(start, end).isPresent();
+    }
+
+    @Override
+    public boolean hasNextWindow(){
+        return repository.getNextWindow().isPresent();
     }
 
     @Override

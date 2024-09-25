@@ -35,6 +35,8 @@ public class WindowResponseDto {
 
     private Long totalServiceFee;
 
+    private boolean isNextWindow;
+
     private RecentWindowResponseDto recentWindow;
 
     private List<RecentWindowResponseDto> pastTwoWindows;
