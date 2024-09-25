@@ -1,0 +1,30 @@
+package com.tobipeter.giftdrop.controllers;
+
+import com.tobipeter.giftdrop.dtos.request.expenseRecord.ExpenseRecordRequestDto;
+import com.tobipeter.giftdrop.exceptions.NotFoundException;
+import com.tobipeter.giftdrop.services.ExpenseRecordMgtService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/expense-records")
+@Validated
+@Slf4j
+public class ExpenseRecordController {
+    private final ExpenseRecordMgtService mgtService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createExpenseRecord(
+            @Valid ExpenseRecordRequestDto request
+    ) throws NotFoundException {
+        mgtService.createExpenseRecord(request);
+    }
+
+}

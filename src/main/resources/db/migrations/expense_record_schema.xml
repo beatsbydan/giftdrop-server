@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create_expense_record_table" author="daniel.onyeachonam" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="expense_records"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="expense_records">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_expense_record" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(100)">
+                <constraints unique="true" uniqueConstraintName="uk_expense_record_code" nullable="false"/>
+            </column>
+            <column name="delivery_fee" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_fee" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="products_fee" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="uk_expense_record_on_user"
+                             referencedColumnNames="id"
+                             referencedTableName="users"
+                             />
+            </column>
+            <column name="window_code" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="uk_expense_record_on_window"
+                             referencedColumnNames="id"
+                             referencedTableName="windows"
+                             />
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,75 @@
+package com.tobipeter.giftdrop.services;
+
+import com.tobipeter.giftdrop.db.models.auth.GiftDropUser;
+import com.tobipeter.giftdrop.db.services.auth.user.UserService;
+import com.tobipeter.giftdrop.dtos.request.auth.CreateUserDto;
+import com.tobipeter.giftdrop.dtos.request.auth.UpdateUserDto;
+import com.tobipeter.giftdrop.dtos.response.user.UserResponseDto;
+import com.tobipeter.giftdrop.enums.Role;
+import com.tobipeter.giftdrop.exceptions.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class UserMgtService {
+    private final UserService userService;
+
+    public UserResponseDto updateUser(UpdateUserDto request, String code) throws NotFoundException {
+        GiftDropUser existingGiftDropUser = userService.getByCode(code);
+
+        updateDbModel(request, existingGiftDropUser);
+
+        return toResponse(userService.save(existingGiftDropUser));
+    }
+
+    public List<UserResponseDto> getRankedUsers(){
+        Pageable pageable = PageRequest.of(0, 10);
+        return toListResponse(userService.getRankedUsers(pageable));
+    }
+    private void updateDbModel(UpdateUserDto request, GiftDropUser existingUser){
+        if(request.getAddress() != null){
+            existingUser.setAddress(request.getAddress());
+        }
+        if(request.getBio() != null){
+            existingUser.setBio(request.getBio());
+        }
+        if(request.getPhone() != null){
+            existingUser.setPhone(request.getPhone());
+        }
+    }
+
+    private UserResponseDto toResponse(GiftDropUser user){
+        UserResponseDto response = new UserResponseDto();
+
+        response.setWishingId(user.getWishingId());
+        response.setGiftingId(user.getGiftingId());
+        response.setFirstName(user.getFirstName());
+        response.setUserName(user.getUsername());
+        response.setEmail(user.getEmail());
+        response.setAddress(user.getAddress());
+        response.setBio(user.getBio());
+        response.setRole(user.getRole().name());
+
+        return response;
+    }
+
+    private List<UserResponseDto> toListResponse(List<GiftDropUser> users){
+        List<UserResponseDto> responses = new ArrayList<>();
+        for(GiftDropUser user : users){
+            responses.add(toResponse(user));
+        }
+
+        return responses;
+    }
+}
