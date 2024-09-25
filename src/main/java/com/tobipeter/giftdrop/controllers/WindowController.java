@@ -51,7 +51,7 @@ public class WindowController {
     @GetMapping("/activate")
     public void activate(
             @Valid @RequestBody ActivateWindowRequest request
-    ){
+    ) throws NotFoundException {
         mgtService.activateWindow(request);
     }
 
