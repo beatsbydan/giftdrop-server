@@ -64,7 +64,7 @@ public class AuthController {
     @GetMapping("/refresh")
     public AuthResponse refresh(
             HttpServletRequest request
-    ) throws UnauthorizedException {
+    ) throws UnauthorizedException, NotFoundException {
         return mgtService.refresh(request);
     }
 }
