@@ -1,6 +1,6 @@
 package com.tobipeter.giftdrop.controllers;
 
-import com.tobipeter.giftdrop.dtos.request.expenseRecord.ExpenseRecordRequestDto;
+import com.tobipeter.giftdrop.dtos.request.expenseRecord.ExpenseRecordRequest;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import com.tobipeter.giftdrop.services.ExpenseRecordMgtService;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ public class ExpenseRecordController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createExpenseRecord(
-            @Valid ExpenseRecordRequestDto request
+            @Valid ExpenseRecordRequest request
     ) throws NotFoundException {
         mgtService.createExpenseRecord(request);
     }

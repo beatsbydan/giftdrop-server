@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UpdateWishDto {
+public class UpdateWish {
     @NotBlank(message = "Code cannot be empty")
     private String code;
 

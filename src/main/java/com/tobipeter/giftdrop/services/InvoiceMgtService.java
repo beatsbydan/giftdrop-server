@@ -3,9 +3,8 @@ package com.tobipeter.giftdrop.services;
 import com.tobipeter.giftdrop.db.models.ExpenseRecord;
 import com.tobipeter.giftdrop.db.models.Invoice;
 import com.tobipeter.giftdrop.db.models.auth.GiftDropUser;
-import com.tobipeter.giftdrop.db.services.auth.user.UserService;
 import com.tobipeter.giftdrop.db.services.invoice.InvoiceService;
-import com.tobipeter.giftdrop.dtos.response.invoice.CreateInvoiceRequestDto;
+import com.tobipeter.giftdrop.dtos.response.invoice.CreateInvoiceRequest;
 import com.tobipeter.giftdrop.dtos.response.invoice.InvoiceResponse;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ import java.util.List;
 public class InvoiceMgtService {
     private final InvoiceService invoiceService;
 
-    public void createInvoice(CreateInvoiceRequestDto request, GiftDropUser user, ExpenseRecord record){
+    public void createInvoice(CreateInvoiceRequest request, GiftDropUser user, ExpenseRecord record){
         invoiceService.save(toDbModel(request, user, record));
     }
 
@@ -34,7 +33,7 @@ public class InvoiceMgtService {
         return toPaginatedResponse(invoiceService.findAll(code, pageable));
     }
 
-    private Invoice toDbModel(CreateInvoiceRequestDto request, GiftDropUser user, ExpenseRecord record){
+    private Invoice toDbModel(CreateInvoiceRequest request, GiftDropUser user, ExpenseRecord record){
         Invoice invoice = new Invoice();
 
         invoice.setName(invoice.generateName());

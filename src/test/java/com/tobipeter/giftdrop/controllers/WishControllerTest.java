@@ -2,14 +2,13 @@ package com.tobipeter.giftdrop.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tobipeter.giftdrop.BaseIntegrationTest;
-import com.tobipeter.giftdrop.dtos.request.wish.CreateWishDto;
-import com.tobipeter.giftdrop.dtos.request.wish.CreateWishListDto;
-import com.tobipeter.giftdrop.dtos.request.wish.UpdateWishDto;
-import com.tobipeter.giftdrop.dtos.request.wish.UpdateWishListDto;
+import com.tobipeter.giftdrop.dtos.request.wish.CreateWish;
+import com.tobipeter.giftdrop.dtos.request.wish.CreateWishList;
+import com.tobipeter.giftdrop.dtos.request.wish.UpdateWish;
+import com.tobipeter.giftdrop.dtos.request.wish.UpdateWishList;
 import com.tobipeter.giftdrop.enums.Category;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
-import com.tobipeter.giftdrop.exceptions.RequestValidationException;
 import com.tobipeter.giftdrop.services.WishMgtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,11 +98,11 @@ public class WishControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    private CreateWishListDto toCreateWishListDto(){
-        CreateWishListDto request = new CreateWishListDto();
-        List<CreateWishDto> wishRequests = new ArrayList<>();
+    private CreateWishList toCreateWishListDto(){
+        CreateWishList request = new CreateWishList();
+        List<CreateWish> wishRequests = new ArrayList<>();
 
-        CreateWishDto wishDto = new CreateWishDto();
+        CreateWish wishDto = new CreateWish();
         wishDto.setName("WISH");
         wishDto.setCategory(Category.APPLIANCES.name());
         wishDto.setPrice(1L);
@@ -116,11 +115,11 @@ public class WishControllerTest extends BaseIntegrationTest {
         return request;
     }
 
-    private UpdateWishListDto toUpdateWishListDto(){
-        UpdateWishListDto request = new UpdateWishListDto();
-        List<UpdateWishDto> wishRequests = new ArrayList<>();
+    private UpdateWishList toUpdateWishListDto(){
+        UpdateWishList request = new UpdateWishList();
+        List<UpdateWish> wishRequests = new ArrayList<>();
 
-        UpdateWishDto dto = new UpdateWishDto();
+        UpdateWish dto = new UpdateWish();
         dto.setCode("CODE");
         dto.setStatus("READY");
 

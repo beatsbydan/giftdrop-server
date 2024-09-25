@@ -5,7 +5,7 @@ import lombok.Data;
 
 
 @Data
-public class CreateWindowDto {
+public class CreateWindow {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String startDate;
 

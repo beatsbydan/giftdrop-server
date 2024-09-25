@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateUserDto extends CreateUserDto{
+public class UpdateUser extends CreateUser {
     private String address;
 
     private String bio;

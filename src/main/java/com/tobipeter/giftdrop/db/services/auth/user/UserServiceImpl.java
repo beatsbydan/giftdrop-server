@@ -2,7 +2,7 @@ package com.tobipeter.giftdrop.db.services.auth.user;
 
 import com.tobipeter.giftdrop.db.models.auth.GiftDropUser;
 import com.tobipeter.giftdrop.db.repositories.auth.UserRepository;
-import com.tobipeter.giftdrop.dtos.request.auth.CreateUserDto;
+import com.tobipeter.giftdrop.dtos.request.auth.CreateUser;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkExistence(CreateUserDto request) {
+    public boolean checkExistence(CreateUser request) {
         return userRepository.existsByEmailOrUsername(request.getEmail(), request.getUserName());
     }
 

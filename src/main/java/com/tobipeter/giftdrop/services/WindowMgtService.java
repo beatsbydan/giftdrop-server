@@ -2,11 +2,12 @@ package com.tobipeter.giftdrop.services;
 
 import com.tobipeter.giftdrop.db.models.Window;
 import com.tobipeter.giftdrop.db.services.window.WindowService;
-import com.tobipeter.giftdrop.dtos.request.window.CreateWindowDto;
+import com.tobipeter.giftdrop.dtos.request.window.ActivateWindowRequest;
+import com.tobipeter.giftdrop.dtos.request.window.CreateWindow;
 import com.tobipeter.giftdrop.dtos.response.MessageResponse;
-import com.tobipeter.giftdrop.dtos.response.window.RecentWindowResponseDto;
+import com.tobipeter.giftdrop.dtos.response.window.RecentWindowResponse;
 import com.tobipeter.giftdrop.dtos.response.window.WindowExpensesResponse;
-import com.tobipeter.giftdrop.dtos.response.window.WindowResponseDto;
+import com.tobipeter.giftdrop.dtos.response.window.WindowResponse;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.List;
 public class WindowMgtService {
     private final WindowService windowService;
 
-    public MessageResponse createWindow(CreateWindowDto request) throws DuplicateEntryException{
+    public MessageResponse createWindow(CreateWindow request) throws DuplicateEntryException{
         boolean exists = windowService.isExists(request);
         boolean hasNextWindow = windowService.hasNextWindow();
 
@@ -41,7 +42,7 @@ public class WindowMgtService {
         return new MessageResponse("Next window created successfully.");
     }
 
-    public WindowResponseDto getNextWindow() throws NotFoundException {
+    public WindowResponse getNextWindow() throws NotFoundException {
         Window window = windowService.getNextWindow();
 
         return toResponse(window, null, null);
@@ -54,12 +55,16 @@ public class WindowMgtService {
 
     }
 
-    public WindowResponseDto getActiveWindow() throws NotFoundException{
+    public WindowResponse getActiveWindow() throws NotFoundException{
         Window window = windowService.getActiveWindow();
         Window mostRecentWindow = windowService.getById(window.getId() - 1);
         Window secondMostRecentWindow = windowService.getById(window.getId() - 2);
 
         return toResponse(window, mostRecentWindow, secondMostRecentWindow);
+    }
+
+    public void activateWindow(ActivateWindowRequest request) throws NotFoundException{
+        windowService.activateWindow(request.getCode());
     }
 
     public void deactivateWindow(){
@@ -74,8 +79,8 @@ public class WindowMgtService {
         return new MessageResponse(WindowType +" window was successfully closed ");
     }
 
-    private WindowResponseDto toResponse(Window window, Window mostRecentWindow, Window secondMostRecentWindow){
-        WindowResponseDto response = new WindowResponseDto();
+    private WindowResponse toResponse(Window window, Window mostRecentWindow, Window secondMostRecentWindow){
+        WindowResponse response = new WindowResponse();
 
         response.setCode(window.getCode());
         response.setActive(window.isActive());
@@ -94,10 +99,10 @@ public class WindowMgtService {
         response.setNextWindow(window.isNextWindow());
 
         if(mostRecentWindow != null && secondMostRecentWindow != null){
-            RecentWindowResponseDto recentWindowResponse = getRecentWindowResponse(mostRecentWindow);
+            RecentWindowResponse recentWindowResponse = getRecentWindowResponse(mostRecentWindow);
             response.setRecentWindow(recentWindowResponse);
 
-            List<RecentWindowResponseDto> pastTwoWindowsResponse = new ArrayList<>();
+            List<RecentWindowResponse> pastTwoWindowsResponse = new ArrayList<>();
             pastTwoWindowsResponse.add(recentWindowResponse);
             pastTwoWindowsResponse.add(getRecentWindowResponse(secondMostRecentWindow));
             response.setPastTwoWindows(pastTwoWindowsResponse);
@@ -122,8 +127,8 @@ public class WindowMgtService {
         return new PageImpl<>(windowsList, windows.getPageable(), windows.getTotalElements());
     }
 
-    private RecentWindowResponseDto getRecentWindowResponse(Window recentWindow){
-        RecentWindowResponseDto recentWindowResponse = new RecentWindowResponseDto();
+    private RecentWindowResponse getRecentWindowResponse(Window recentWindow){
+        RecentWindowResponse recentWindowResponse = new RecentWindowResponse();
 
         recentWindowResponse.setTotalAmountSpent(recentWindow.getTotalExpenses());
         recentWindowResponse.setWishesGranted(recentWindow.getCompletedGifts());
@@ -134,7 +139,7 @@ public class WindowMgtService {
         return recentWindowResponse;
     }
 
-    private Window toDbModel(CreateWindowDto request){
+    private Window toDbModel(CreateWindow request){
         Window window = new Window();
 
         window.setCode(window.generateCode());

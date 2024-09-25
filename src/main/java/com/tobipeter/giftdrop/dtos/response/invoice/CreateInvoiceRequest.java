@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CreateInvoiceRequestDto {
+public class CreateInvoiceRequest {
     @NotBlank(message = "Amount cannot be empty")
     private String amountSpent;
 }

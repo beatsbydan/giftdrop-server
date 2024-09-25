@@ -3,7 +3,7 @@ package com.tobipeter.giftdrop.dtos.response.wish;
 import lombok.Data;
 
 @Data
-public class WishResponseDto {
+public class WishResponse {
     private String wishingId;
 
     private String wishCode;

@@ -6,8 +6,8 @@ import com.tobipeter.giftdrop.db.models.auth.GiftDropUser;
 import com.tobipeter.giftdrop.db.services.auth.user.UserService;
 import com.tobipeter.giftdrop.db.services.expenseRecord.ExpenseRecordService;
 import com.tobipeter.giftdrop.db.services.window.WindowService;
-import com.tobipeter.giftdrop.dtos.request.expenseRecord.ExpenseRecordRequestDto;
-import com.tobipeter.giftdrop.dtos.response.invoice.CreateInvoiceRequestDto;
+import com.tobipeter.giftdrop.dtos.request.expenseRecord.ExpenseRecordRequest;
+import com.tobipeter.giftdrop.dtos.response.invoice.CreateInvoiceRequest;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ public class ExpenseRecordMgtService {
     private final UserService userService;
     private final WindowService windowService;
 
-    public void createExpenseRecord(ExpenseRecordRequestDto request) throws NotFoundException {
-        CreateInvoiceRequestDto invoiceRequest = new CreateInvoiceRequestDto();
+    public void createExpenseRecord(ExpenseRecordRequest request) throws NotFoundException {
+        CreateInvoiceRequest invoiceRequest = new CreateInvoiceRequest();
 
         GiftDropUser user = userService.getByCode(request.getUserCode());
         Window window = windowService.getByCode(request.getWindowCode());
@@ -33,7 +33,7 @@ public class ExpenseRecordMgtService {
         ExpenseRecord record = expenseRecordService.save(toDbModel(request, user, window));
         invoiceMgtService.createInvoice(invoiceRequest, user, record);
     }
-    private ExpenseRecord toDbModel(ExpenseRecordRequestDto request, GiftDropUser user, Window window){
+    private ExpenseRecord toDbModel(ExpenseRecordRequest request, GiftDropUser user, Window window){
         ExpenseRecord record = new ExpenseRecord();
 
         record.setDeliveryFee(Long.parseLong(request.getDeliveryFee()));

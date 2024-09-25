@@ -1,7 +1,7 @@
 package com.tobipeter.giftdrop.db.services.auth.user;
 
 import com.tobipeter.giftdrop.db.models.auth.GiftDropUser;
-import com.tobipeter.giftdrop.dtos.request.auth.CreateUserDto;
+import com.tobipeter.giftdrop.dtos.request.auth.CreateUser;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +17,5 @@ public interface UserService extends UserDetailsService {
     GiftDropUser getByWishingId(String wishingId) throws NotFoundException;
     Page<GiftDropUser> getPaginatedUsers(Pageable pageable);
     List<GiftDropUser> getRankedUsers(Pageable pageable);
-    boolean checkExistence(CreateUserDto dto);
+    boolean checkExistence(CreateUser dto);
 }

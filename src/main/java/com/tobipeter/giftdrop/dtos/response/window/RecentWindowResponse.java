@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class RecentWindowResponseDto {
+public class RecentWindowResponse {
     private long totalAmountSpent;
 
     private long wishesGranted;

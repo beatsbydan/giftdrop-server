@@ -29,6 +29,11 @@ public interface WindowRepository extends JpaRepository<Window, Long> {
 
     @Transactional
     @Modifying
+    @Query("UPDATE Window w SET w.active = true, w.isNextWindow = false WHERE w.code = :code")
+    void activate(@Param("code") String code);
+
+    @Transactional
+    @Modifying
     @Query("UPDATE Window w SET w.active = false WHERE w.active = true")
     void deactivate();
 

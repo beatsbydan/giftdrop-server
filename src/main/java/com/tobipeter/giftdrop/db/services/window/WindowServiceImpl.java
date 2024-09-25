@@ -2,7 +2,7 @@ package com.tobipeter.giftdrop.db.services.window;
 
 import com.tobipeter.giftdrop.db.models.Window;
 import com.tobipeter.giftdrop.db.repositories.WindowRepository;
-import com.tobipeter.giftdrop.dtos.request.window.CreateWindowDto;
+import com.tobipeter.giftdrop.dtos.request.window.CreateWindow;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +48,12 @@ public class WindowServiceImpl implements WindowService{
     }
 
     @Override
+    public void activateWindow(String code) throws NotFoundException {
+        getByCode(code);
+        repository.activate(code);
+    }
+
+    @Override
     public void deactivateWindow(){
         repository.deactivate();
     }
@@ -59,7 +65,7 @@ public class WindowServiceImpl implements WindowService{
     }
 
     @Override
-    public boolean isExists(CreateWindowDto request) {
+    public boolean isExists(CreateWindow request) {
         LocalDate start = LocalDate.parse(request.getStartDate(), DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDate end = LocalDate.parse(request.getEndDate(), DateTimeFormatter.ISO_LOCAL_DATE);
 

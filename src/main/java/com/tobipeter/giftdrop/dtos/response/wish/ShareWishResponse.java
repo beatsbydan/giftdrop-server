@@ -10,5 +10,5 @@ import java.util.List;
 public class ShareWishResponse {
     private String bio;
 
-    private List<WishResponseDto> wishes;
+    private List<WishResponse> wishes;
 }

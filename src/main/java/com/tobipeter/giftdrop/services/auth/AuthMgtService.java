@@ -8,7 +8,7 @@ import com.tobipeter.giftdrop.db.services.auth.user.UserService;
 import com.tobipeter.giftdrop.db.services.window.WindowService;
 import com.tobipeter.giftdrop.dtos.request.auth.*;
 import com.tobipeter.giftdrop.dtos.response.MessageResponse;
-import com.tobipeter.giftdrop.dtos.response.auth.AuthResponseDto;
+import com.tobipeter.giftdrop.dtos.response.auth.AuthResponse;
 import com.tobipeter.giftdrop.enums.Role;
 import com.tobipeter.giftdrop.exceptions.*;
 import com.tobipeter.giftdrop.services.MailingMgtService;
@@ -53,7 +53,7 @@ public class AuthMgtService implements LogoutHandler {
     @Value("${giftrop.security.reset-token.expiration}")
     private long resetTokenExpiration;
 
-    public MessageResponse createUser(CreateUserDto request) throws DuplicateEntryException {
+    public MessageResponse createUser(CreateUser request) throws DuplicateEntryException {
         boolean isExistingUser = userService.checkExistence(request);
         if(isExistingUser){
             throw new DuplicateEntryException("This user already exists. Consider changing the EMAIL or USERNAME.");
@@ -64,7 +64,7 @@ public class AuthMgtService implements LogoutHandler {
         return new MessageResponse("User created successfully");
     }
 
-    public AuthResponseDto logIn(LogInRequestDto request, HttpServletResponse httpResponse) throws NotFoundException, ForbiddenException {
+    public AuthResponse logIn(LogInRequest request, HttpServletResponse httpResponse) throws NotFoundException, ForbiddenException {
         try{
             authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -89,7 +89,7 @@ public class AuthMgtService implements LogoutHandler {
         return toResponse(currentUser, accessToken, activeWindow);
     }
 
-    public MessageResponse verifyEmail(VerifyEmailRequestDto request, HttpServletResponse httpResponse) throws NotFoundException, MailingException {
+    public MessageResponse verifyEmail(VerifyEmailRequest request, HttpServletResponse httpResponse) throws NotFoundException, MailingException {
         GiftDropUser user = userService.getByEmail(request.getEmail());
 
         String otpValue = mailingMgtService.sendOtpToUser(user);
@@ -109,7 +109,7 @@ public class AuthMgtService implements LogoutHandler {
         return new MessageResponse("A One Time Password (OTP) was sent to your mail.");
     }
 
-    public MessageResponse verifyOtp(VerifyOtpRequestDto request, HttpServletRequest httpRequest) throws RequestValidationException, NotFoundException {
+    public MessageResponse verifyOtp(VerifyOtpRequest request, HttpServletRequest httpRequest) throws RequestValidationException, NotFoundException {
         String token = getTokenFromCookie(httpRequest.getCookies(), TokenTypeUtil.RESET_TOKEN);
         String email = jwtMgtService.extractUsername(token);
 
@@ -122,7 +122,7 @@ public class AuthMgtService implements LogoutHandler {
         return new MessageResponse("OTP successfully validated.");
     }
 
-    public MessageResponse resetPassword(ResetPasswordRequestDto request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws NotFoundException {
+    public MessageResponse resetPassword(ResetPasswordRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws NotFoundException {
         String token = getTokenFromCookie(httpRequest.getCookies(), TokenTypeUtil.RESET_TOKEN);
         String email = jwtMgtService.extractUsername(token);
 
@@ -136,7 +136,7 @@ public class AuthMgtService implements LogoutHandler {
         return new MessageResponse("Password changed successfully!");
     }
 
-    public AuthResponseDto refresh(
+    public AuthResponse refresh(
             HttpServletRequest request
     ) throws UnauthorizedException, NotFoundException {
         String refreshToken = getTokenFromCookie(request.getCookies(), TokenTypeUtil.REFRESH_TOKEN);
@@ -213,7 +213,7 @@ public class AuthMgtService implements LogoutHandler {
         }
     }
 
-    private GiftDropUser createDbModel(CreateUserDto request){
+    private GiftDropUser createDbModel(CreateUser request){
         GiftDropUser newUser = new GiftDropUser();
 
         newUser.setCode(newUser.generateCode());
@@ -229,8 +229,8 @@ public class AuthMgtService implements LogoutHandler {
         return newUser;
     }
 
-    private AuthResponseDto toResponse(GiftDropUser currentUser, String token, Window window){
-        AuthResponseDto response = new AuthResponseDto();
+    private AuthResponse toResponse(GiftDropUser currentUser, String token, Window window){
+        AuthResponse response = new AuthResponse();
 
         response.setCode(currentUser.getCode());
         response.setWishingId(currentUser.getWishingId());

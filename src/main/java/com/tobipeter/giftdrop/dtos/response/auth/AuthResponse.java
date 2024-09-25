@@ -1,11 +1,11 @@
 package com.tobipeter.giftdrop.dtos.response.auth;
 
-import com.tobipeter.giftdrop.dtos.response.user.UserResponseDto;
+import com.tobipeter.giftdrop.dtos.response.user.UserResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AuthResponseDto extends UserResponseDto {
+public class AuthResponse extends UserResponse {
     private String token;
 }

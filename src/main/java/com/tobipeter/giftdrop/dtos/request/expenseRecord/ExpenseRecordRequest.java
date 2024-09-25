@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class ExpenseRecordRequestDto {
+public class ExpenseRecordRequest {
     @NotBlank(message = "Delivery fee cannot be blank.")
     private String deliveryFee;
 

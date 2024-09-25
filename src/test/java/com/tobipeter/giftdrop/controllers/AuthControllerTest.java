@@ -2,12 +2,11 @@ package com.tobipeter.giftdrop.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tobipeter.giftdrop.BaseIntegrationTest;
-import com.tobipeter.giftdrop.dtos.request.auth.CreateUserDto;
-import com.tobipeter.giftdrop.dtos.request.auth.LogInRequestDto;
+import com.tobipeter.giftdrop.dtos.request.auth.CreateUser;
+import com.tobipeter.giftdrop.dtos.request.auth.LogInRequest;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import com.tobipeter.giftdrop.exceptions.UnauthorizedException;
-import com.tobipeter.giftdrop.services.UserMgtService;
 import com.tobipeter.giftdrop.services.auth.AuthMgtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,7 +43,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
     @Test
     public void should_register_a_user_FAILURE() throws Exception {
         doThrow(new DuplicateEntryException("User already exists"))
-                .when(mgtService).createUser(any(CreateUserDto.class));
+                .when(mgtService).createUser(any(CreateUser.class));
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
                 .content(objectMapper.writeValueAsString(toUserRequestDto()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -64,7 +63,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
     @Test
     public void should_log_a_user_in_FAILURE() throws Exception {
         doThrow(new NotFoundException("User not found"))
-                .when(mgtService).logIn(any(LogInRequestDto.class), any(HttpServletResponse.class));
+                .when(mgtService).logIn(any(LogInRequest.class), any(HttpServletResponse.class));
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/login")
                 .content(objectMapper.writeValueAsString(toLogInRequestDto()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -88,8 +87,8 @@ public class AuthControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    private CreateUserDto toUserRequestDto (){
-        CreateUserDto dto = new CreateUserDto();
+    private CreateUser toUserRequestDto (){
+        CreateUser dto = new CreateUser();
 
         dto.setFirstName("Daniel");
         dto.setUserName("beats_by_dan");
@@ -100,8 +99,8 @@ public class AuthControllerTest extends BaseIntegrationTest {
         return dto;
     }
 
-    private LogInRequestDto toLogInRequestDto(){
-        LogInRequestDto dto = new LogInRequestDto();
+    private LogInRequest toLogInRequestDto(){
+        LogInRequest dto = new LogInRequest();
 
         dto.setUserName("beats_by_dan");
         dto.setPassword("daniel@password");

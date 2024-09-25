@@ -2,7 +2,7 @@ package com.tobipeter.giftdrop.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tobipeter.giftdrop.BaseIntegrationTest;
-import com.tobipeter.giftdrop.dtos.request.window.CreateWindowDto;
+import com.tobipeter.giftdrop.dtos.request.window.CreateWindow;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import com.tobipeter.giftdrop.services.WindowMgtService;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.time.LocalDate;
 
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -96,8 +94,8 @@ public class WindowControllerTest extends BaseIntegrationTest {
     }
 
 
-    private CreateWindowDto toCreateWindowDto () {
-        CreateWindowDto request = new CreateWindowDto();
+    private CreateWindow toCreateWindowDto () {
+        CreateWindow request = new CreateWindow();
 
         request.setStartDate(null);
         request.setEndDate(null);

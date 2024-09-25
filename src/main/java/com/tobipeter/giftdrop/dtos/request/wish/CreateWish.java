@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CreateWishDto {
+public class CreateWish {
     @NotBlank(message = "Wish name cannot be blank.")
     private String name;
 

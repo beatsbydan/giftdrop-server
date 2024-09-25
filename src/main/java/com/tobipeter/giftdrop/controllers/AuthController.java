@@ -2,7 +2,7 @@ package com.tobipeter.giftdrop.controllers;
 
 import com.tobipeter.giftdrop.dtos.request.auth.*;
 import com.tobipeter.giftdrop.dtos.response.MessageResponse;
-import com.tobipeter.giftdrop.dtos.response.auth.AuthResponseDto;
+import com.tobipeter.giftdrop.dtos.response.auth.AuthResponse;
 import com.tobipeter.giftdrop.exceptions.*;
 import com.tobipeter.giftdrop.services.auth.AuthMgtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,14 +23,14 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponse createUser(
-            @RequestBody @Valid CreateUserDto request
+            @RequestBody @Valid CreateUser request
     ) throws DuplicateEntryException {
         return mgtService.createUser(request);
     }
 
     @PostMapping("/login")
-    public AuthResponseDto login(
-            @Valid @RequestBody LogInRequestDto request,
+    public AuthResponse login(
+            @Valid @RequestBody LogInRequest request,
             HttpServletResponse httpResponse
     ) throws NotFoundException, ForbiddenException {
         return mgtService.logIn(request, httpResponse);
@@ -38,7 +38,7 @@ public class AuthController {
 
     @GetMapping("/verify-email")
     public MessageResponse verifyEmail(
-            @Valid @RequestBody VerifyEmailRequestDto request,
+            @Valid @RequestBody VerifyEmailRequest request,
             HttpServletResponse httpResponse
     ) throws NotFoundException, MailingException {
         return mgtService.verifyEmail(request, httpResponse);
@@ -46,7 +46,7 @@ public class AuthController {
 
     @GetMapping("/verify-otp")
     public MessageResponse verifyOtp(
-            @Valid @RequestBody VerifyOtpRequestDto request,
+            @Valid @RequestBody VerifyOtpRequest request,
             HttpServletRequest httpRequest
     ) throws RequestValidationException, NotFoundException {
         return mgtService.verifyOtp(request, httpRequest);
@@ -54,7 +54,7 @@ public class AuthController {
 
     @PutMapping("/reset-password")
     public MessageResponse resetPassword(
-            @Valid @RequestBody ResetPasswordRequestDto request,
+            @Valid @RequestBody ResetPasswordRequest request,
             HttpServletRequest httpRequest,
             HttpServletResponse httpResponse
     ) throws NotFoundException {
@@ -62,7 +62,7 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    public AuthResponseDto refresh(
+    public AuthResponse refresh(
             HttpServletRequest request
     ) throws UnauthorizedException {
         return mgtService.refresh(request);

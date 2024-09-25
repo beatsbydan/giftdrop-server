@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class VerifyOtpRequestDto {
-    @NotBlank(message = "OTP cannot be empty")
-    private String otp;
+public class ResetPasswordRequest {
+    @NotBlank(message = "Password cannot be empty")
+    private String newPassword;
 }

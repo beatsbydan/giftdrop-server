@@ -4,13 +4,13 @@ import com.tobipeter.giftdrop.db.models.auth.GiftDropUser;
 import com.tobipeter.giftdrop.db.models.Wish;
 import com.tobipeter.giftdrop.db.services.auth.user.UserService;
 import com.tobipeter.giftdrop.db.services.wish.WishService;
-import com.tobipeter.giftdrop.dtos.request.wish.CreateWishDto;
-import com.tobipeter.giftdrop.dtos.request.wish.CreateWishListDto;
-import com.tobipeter.giftdrop.dtos.request.wish.UpdateWishDto;
-import com.tobipeter.giftdrop.dtos.request.wish.UpdateWishListDto;
+import com.tobipeter.giftdrop.dtos.request.wish.CreateWish;
+import com.tobipeter.giftdrop.dtos.request.wish.CreateWishList;
+import com.tobipeter.giftdrop.dtos.request.wish.UpdateWish;
+import com.tobipeter.giftdrop.dtos.request.wish.UpdateWishList;
 import com.tobipeter.giftdrop.dtos.response.wish.ShareWishResponse;
-import com.tobipeter.giftdrop.dtos.response.wish.UserWishesResponseDto;
-import com.tobipeter.giftdrop.dtos.response.wish.WishResponseDto;
+import com.tobipeter.giftdrop.dtos.response.wish.UserWishesResponse;
+import com.tobipeter.giftdrop.dtos.response.wish.WishResponse;
 import com.tobipeter.giftdrop.enums.Category;
 import com.tobipeter.giftdrop.enums.Status;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
@@ -18,16 +18,13 @@ import com.tobipeter.giftdrop.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,10 +33,10 @@ public class WishMgtService {
     private final WishService wishService;
     private final UserService userService;
 
-    public List<WishResponseDto> createWishList(CreateWishListDto request) throws NotFoundException, DuplicateEntryException {
+    public List<WishResponse> createWishList(CreateWishList request) throws NotFoundException, DuplicateEntryException {
         String userWishingId = request.getWishes()
                 .stream()
-                .findFirst().map(CreateWishDto::getUserWishingId).orElse(null);
+                .findFirst().map(CreateWish::getUserWishingId).orElse(null);
 
         GiftDropUser user = userService.getByWishingId(userWishingId);
         user.setHasWish(true);
@@ -48,14 +45,14 @@ public class WishMgtService {
         return toListResponse(wishService.save(toListWishDBModel(request.getWishes(), user)));
     }
 
-    public List<UserWishesResponseDto> getAllWishes(int page, int size){
+    public List<UserWishesResponse> getAllWishes(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<GiftDropUser> requestedUsers = userService.getPaginatedUsers(pageable);
 
-        List<UserWishesResponseDto> requestedWishes= new ArrayList<>();
+        List<UserWishesResponse> requestedWishes= new ArrayList<>();
 
         for(GiftDropUser user : requestedUsers.getContent()){
-            List<WishResponseDto> userWishes = getWishesByWishingId(user.getWishingId());
+            List<WishResponse> userWishes = getWishesByWishingId(user.getWishingId());
             addToResponse(requestedWishes, userWishes, user);
         }
 
@@ -64,24 +61,24 @@ public class WishMgtService {
 
     public ShareWishResponse shareWishes(String wishingId) throws NotFoundException {
         GiftDropUser user = userService.getByWishingId(wishingId);
-        List<WishResponseDto> userWishes = getWishesByWishingId(wishingId);
+        List<WishResponse> userWishes = getWishesByWishingId(wishingId);
 
         return new ShareWishResponse(user.getBio(), userWishes);
     }
 
-    public List<WishResponseDto> getWishesByWishingId(String wishingId){
+    public List<WishResponse> getWishesByWishingId(String wishingId){
         return toListResponse(wishService.getWishesById(wishingId));
     }
 
-    public void updateWishItems(UpdateWishListDto request) throws NotFoundException{
-        for(UpdateWishDto wish : request.getWishes()){
+    public void updateWishItems(UpdateWishList request) throws NotFoundException{
+        for(UpdateWish wish : request.getWishes()){
            Wish currentWish = wishService.findByCode(wish.getCode());
            currentWish.setStatus(Status.valueOf(wish.getStatus()));
            wishService.save(currentWish);
         }
     }
 
-    private Wish toWishDBModel(CreateWishDto request, GiftDropUser user){
+    private Wish toWishDBModel(CreateWish request, GiftDropUser user){
         Wish newWish = new Wish();
 
         newWish.setCode(newWish.generateCode());
@@ -95,8 +92,8 @@ public class WishMgtService {
         return newWish;
     }
 
-    private WishResponseDto toResponse(Wish wish){
-        WishResponseDto response = new WishResponseDto();
+    private WishResponse toResponse(Wish wish){
+        WishResponse response = new WishResponse();
 
         response.setWishCategory(wish.getCategory().name());
         response.setWishCode(wish.getCode());
@@ -110,10 +107,10 @@ public class WishMgtService {
         return response;
     }
 
-    private List<Wish> toListWishDBModel(List<CreateWishDto> wishRequests, GiftDropUser user) throws DuplicateEntryException {
+    private List<Wish> toListWishDBModel(List<CreateWish> wishRequests, GiftDropUser user) throws DuplicateEntryException {
         List<Wish> newWishList= new ArrayList<>();
 
-        for(CreateWishDto wishRequest : wishRequests){
+        for(CreateWish wishRequest : wishRequests){
             Optional<Wish> wishByName = wishService.findByName(wishRequest.getName());
             if(wishByName.isPresent()){
                 throw new DuplicateEntryException("Wish already exists");
@@ -124,8 +121,8 @@ public class WishMgtService {
         return newWishList;
     }
 
-    private List<WishResponseDto> toListResponse(List<Wish> wishes){
-        List<WishResponseDto> newWishListResponse= new ArrayList<>();
+    private List<WishResponse> toListResponse(List<Wish> wishes){
+        List<WishResponse> newWishListResponse= new ArrayList<>();
 
         for(Wish wish : wishes){
             newWishListResponse.add(toResponse(wish));
@@ -134,8 +131,8 @@ public class WishMgtService {
         return newWishListResponse;
     }
 
-    private void addToResponse(List<UserWishesResponseDto> wishes, List<WishResponseDto> userWishes, GiftDropUser user){
-        UserWishesResponseDto currentUserWish = new UserWishesResponseDto();
+    private void addToResponse(List<UserWishesResponse> wishes, List<WishResponse> userWishes, GiftDropUser user){
+        UserWishesResponse currentUserWish = new UserWishesResponse();
 
         currentUserWish.setUserName(user.getUsername());
         currentUserWish.setWishingId(user.getWishingId());

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UpdateWishListDto {
+public class CreateWishList {
     @Size(min = 1, message = "At least one wish must be present")
-    private List<UpdateWishDto> wishes;
+    private List<CreateWish> wishes;
 }

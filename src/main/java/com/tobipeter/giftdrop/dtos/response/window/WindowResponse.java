@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class WindowResponseDto {
+public class WindowResponse {
     private boolean active;
 
     private String code;
@@ -37,7 +37,9 @@ public class WindowResponseDto {
 
     private boolean isNextWindow;
 
-    private RecentWindowResponseDto recentWindow;
+    private RecentWindowResponse recentWindow;
 
-    private List<RecentWindowResponseDto> pastTwoWindows;
+    private List<RecentWindowResponse> pastTwoWindows;
+
+    private NextWindowResponse nextWindow;
 }
