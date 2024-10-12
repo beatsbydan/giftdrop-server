@@ -73,7 +73,7 @@ public class WishControllerTest extends BaseIntegrationTest {
 
     @Test
     public void should_share_a_users_wish_list() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/wish/share/123"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/wishes/share/123"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

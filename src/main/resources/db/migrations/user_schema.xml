@@ -63,11 +63,11 @@
             </not>
         </preConditions>
         <addColumn tableName="users">
-            <column name="user_otp" type="VARCHAR(100)">
+            <column name="user_otp" type="BIGINT">
                 <constraints
                     nullable="false"
                     foreignKeyName="fk_otp_on_user"
-                    referencedColumnNames="code"
+                    referencedColumnNames="id"
                     referencedTableName="otps"
                 />
             </column>

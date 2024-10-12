@@ -8,11 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/v1/expense-records")
 @Validated
 @Slf4j
@@ -22,7 +21,7 @@ public class ExpenseRecordController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createExpenseRecord(
-            @Valid ExpenseRecordRequest request
+            @Valid @RequestBody ExpenseRecordRequest request
     ) throws NotFoundException {
         mgtService.createExpenseRecord(request);
     }

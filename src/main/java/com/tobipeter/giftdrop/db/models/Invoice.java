@@ -21,7 +21,7 @@ public class Invoice extends BaseModel{
     private GiftDropUser giftDropUser;
 
     @OneToOne
-    @JoinColumn(name = "expense_record_code", referencedColumnName = "code")
+    @JoinColumn(name = "expense_record_code", referencedColumnName = "id")
     private ExpenseRecord expenseRecord;
 
     public String generateName(){

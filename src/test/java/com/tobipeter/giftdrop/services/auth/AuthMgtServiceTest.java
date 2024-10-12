@@ -1,4 +1,4 @@
-package com.tobipeter.giftdrop.services;
+package com.tobipeter.giftdrop.services.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tobipeter.giftdrop.BaseIntegrationTest;

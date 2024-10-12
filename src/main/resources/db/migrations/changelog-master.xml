@@ -4,11 +4,12 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
+    <include file="classpath:db/migrations/otp_schema.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/migrations/user_schema.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/migrations/window_schema.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/migrations/wish_schema.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/migrations/shedlock_schema.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:db/migrations/otp_schema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/migrations/expense_record_schema.xml" relativeToChangelogFile="false"/>
     <include file="classpath:db/migrations/invoice_schema.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

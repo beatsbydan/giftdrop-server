@@ -49,6 +49,32 @@ public class WindowControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void should_get_past_expenses() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/windows/past-expenses")
+                .param("page", "0")
+                .param("size", "10")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void should_get_next_window_SUCCESS() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/windows/next")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void should_get_next_window_FAILURE() throws Exception{
+        doThrow(new NotFoundException("Window not found"))
+                .when(windowMgtService).getNextWindow();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/windows/next")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void should_get_active_window_SUCCESS() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/windows/active"))
                 .andDo(print())
@@ -56,12 +82,36 @@ public class WindowControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void should_getActive_window_FAILURE() throws Exception {
+    public void should_get_active_window_FAILURE() throws Exception {
         doThrow(new NotFoundException("No active window present"))
                 .when(windowMgtService).getActiveWindow();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/windows/active"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_activate_window_SUCCESS() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/windows/activate/123")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void should_activate_window_FAILURE() throws Exception{
+        doThrow(new NotFoundException("Window not found"))
+                .when(windowMgtService).activateWindow("123");
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/windows/activate/123")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void should_deactivate_window_SUCCESS() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/windows/deactivate")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -84,16 +134,6 @@ public class WindowControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void should_get_all_paginated_wishes() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/windows")
-                        .param("page", "0")
-                        .param("size", "10"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-
     private CreateWindow toCreateWindowDto () {
         CreateWindow request = new CreateWindow();
 
@@ -102,6 +142,4 @@ public class WindowControllerTest extends BaseIntegrationTest {
 
         return request;
     }
-
-
 }

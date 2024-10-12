@@ -29,7 +29,6 @@ public class UserControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    @SneakyThrows
     public void should_update_user_SUCCESS() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/123")
                 .content(objectMapper.writeValueAsString(toUserRequestDto()))
@@ -39,7 +38,6 @@ public class UserControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    @SneakyThrows
     public void should_update_user_FAILURE() throws Exception{
         doThrow(new NotFoundException("User not found"))
                 .when(userMgtService).updateUser(toUserRequestDto(), "123");
@@ -50,23 +48,13 @@ public class UserControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @SneakyThrows
-    public void should_get_a_user_by_code_SUCCESS() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/123"))
+   @Test
+   public void should_get_ranked_users() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/rankings")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @SneakyThrows
-    public void should_get_paginated_users() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
-                .param("page", "0")
-                .param("size", "10"))
-                .andDo((print()))
-                .andExpect(status().isOk());
-    }
+   }
 
     private UpdateUser toUserRequestDto (){
         UpdateUser dto = new UpdateUser();

@@ -1,6 +1,5 @@
 package com.tobipeter.giftdrop.controllers;
 
-import com.tobipeter.giftdrop.dtos.request.window.ActivateWindowRequest;
 import com.tobipeter.giftdrop.dtos.request.window.CreateWindow;
 import com.tobipeter.giftdrop.dtos.response.MessageResponse;
 import com.tobipeter.giftdrop.dtos.response.window.WindowExpensesResponse;
@@ -48,11 +47,11 @@ public class WindowController {
         return mgtService.getActiveWindow();
     }
 
-    @GetMapping("/activate")
+    @PutMapping("/activate/{code}")
     public void activate(
-            @Valid @RequestBody ActivateWindowRequest request
+            @PathVariable("code") String code
     ) throws NotFoundException {
-        mgtService.activateWindow(request);
+        mgtService.activateWindow(code);
     }
 
     @PutMapping("/deactivate")

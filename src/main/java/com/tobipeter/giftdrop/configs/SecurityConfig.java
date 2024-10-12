@@ -25,7 +25,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)-> requests
                         .requestMatchers("/", "/home", "/api/v1/auth/**", "/api/v1/wish/share/**", "/api/v1/view/**", "/api/v1/windows/next", "/api/v1/windows/active").permitAll()
@@ -42,8 +42,7 @@ public class SecurityConfig {
                                 SecurityContextHolder.clearContext())
                         )
                         .deleteCookies("refreshToken", "resetToken")
-                );
-
-        return http.build();
+                )
+                .build();
     }
 }

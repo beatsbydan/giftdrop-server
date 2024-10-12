@@ -32,7 +32,7 @@ public class WishController {
     }
 
     @GetMapping("/users/wishes")
-    public List<UserWishesResponse> getPaginatedWishes(
+    public List<UserWishesResponse> getWishes(
             @RequestParam(name = "page") int page,
             @RequestParam(name = "size") int size
     ){
@@ -46,7 +46,7 @@ public class WishController {
         return wishMgtService.getWishesByWishingId(wishingId);
     }
 
-    @GetMapping("/wish/share/{wishingId}")
+    @GetMapping("/wishes/share/{wishingId}")
     public ShareWishResponse shareWishByWishingId(
             @PathVariable String wishingId
     ) throws NotFoundException {

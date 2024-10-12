@@ -36,7 +36,7 @@ public class AuthController {
         return mgtService.logIn(request, httpResponse);
     }
 
-    @GetMapping("/verify-email")
+    @PostMapping("/verify-email")
     public MessageResponse verifyEmail(
             @Valid @RequestBody VerifyEmailRequest request,
             HttpServletResponse httpResponse
@@ -44,7 +44,7 @@ public class AuthController {
         return mgtService.verifyEmail(request, httpResponse);
     }
 
-    @GetMapping("/verify-otp")
+    @PostMapping("/verify-otp")
     public MessageResponse verifyOtp(
             @Valid @RequestBody VerifyOtpRequest request,
             HttpServletRequest httpRequest
@@ -52,7 +52,7 @@ public class AuthController {
         return mgtService.verifyOtp(request, httpRequest);
     }
 
-    @PutMapping("/reset-password")
+    @PostMapping("/reset-password")
     public MessageResponse resetPassword(
             @Valid @RequestBody ResetPasswordRequest request,
             HttpServletRequest httpRequest,

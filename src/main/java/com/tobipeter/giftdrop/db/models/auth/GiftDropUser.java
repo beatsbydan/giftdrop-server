@@ -55,7 +55,7 @@ public class GiftDropUser extends BaseModel implements UserDetails {
     private List<ExpenseRecord> expenseRecords;
 
     @OneToOne
-    @JoinColumn(name = "user_otp", referencedColumnName = "code")
+    @JoinColumn(name = "user_otp", referencedColumnName = "id")
     private Otp otp;
 
     private Long points;

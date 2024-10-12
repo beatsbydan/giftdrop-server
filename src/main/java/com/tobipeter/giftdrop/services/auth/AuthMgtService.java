@@ -19,7 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -43,14 +45,16 @@ public class AuthMgtService implements LogoutHandler {
     private final MailingMgtService mailingMgtService;
     private final UserService userService;
     private final WindowService windowService;
-    private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
+    @Lazy
+    @Autowired
+    private AuthenticationManager authManager;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${giftrop.security.refresh-token.expiration}")
+    @Value("${giftdrop.security.refresh-token.expiration}")
     private long refreshTokenExpiration;
-    @Value("${giftrop.security.reset-token.expiration}")
+    @Value("${giftdrop.security.reset-token.expiration}")
     private long resetTokenExpiration;
 
     public MessageResponse createUser(CreateUser request) throws DuplicateEntryException {
@@ -206,7 +210,8 @@ public class AuthMgtService implements LogoutHandler {
 
     private void clearCookies(HttpServletRequest request, HttpServletResponse response){
         for(Cookie cookie : request.getCookies()){
-            cookie.setPath("/");
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
             cookie.setValue(null);
             cookie.setMaxAge(0);
             response.addCookie(cookie);

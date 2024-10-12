@@ -2,7 +2,6 @@ package com.tobipeter.giftdrop.services;
 
 import com.tobipeter.giftdrop.db.models.Window;
 import com.tobipeter.giftdrop.db.services.window.WindowService;
-import com.tobipeter.giftdrop.dtos.request.window.ActivateWindowRequest;
 import com.tobipeter.giftdrop.dtos.request.window.CreateWindow;
 import com.tobipeter.giftdrop.dtos.response.MessageResponse;
 import com.tobipeter.giftdrop.dtos.response.window.RecentWindowResponse;
@@ -63,8 +62,8 @@ public class WindowMgtService {
         return toResponse(window, mostRecentWindow, secondMostRecentWindow);
     }
 
-    public void activateWindow(ActivateWindowRequest request) throws NotFoundException{
-        windowService.activateWindow(request.getCode());
+    public void activateWindow(String code) throws NotFoundException{
+        windowService.activateWindow(code);
     }
 
     public void deactivateWindow(){

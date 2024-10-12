@@ -2,10 +2,10 @@ package com.tobipeter.giftdrop.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tobipeter.giftdrop.BaseIntegrationTest;
-import com.tobipeter.giftdrop.dtos.request.auth.CreateUser;
-import com.tobipeter.giftdrop.dtos.request.auth.LogInRequest;
+import com.tobipeter.giftdrop.dtos.request.auth.*;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
+import com.tobipeter.giftdrop.exceptions.RequestValidationException;
 import com.tobipeter.giftdrop.exceptions.UnauthorizedException;
 import com.tobipeter.giftdrop.services.auth.AuthMgtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -72,6 +72,65 @@ public class AuthControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void should_verify_email_SUCCESS() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/verify-email")
+                .content(objectMapper.writeValueAsString(toVerifyEmailRequest()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_verify_email_FAILURE() throws Exception {
+        doThrow(new NotFoundException("User not found"))
+                .when(mgtService).verifyEmail(any(VerifyEmailRequest.class), any(HttpServletResponse.class));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/verify-email")
+                .content(objectMapper.writeValueAsString(toVerifyEmailRequest()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+@Test
+    public void should_verify_otp_SUCCESS() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/verify-otp")
+                .content(objectMapper.writeValueAsString(toVerifyOtpRequest()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_verify_otp_FAILURE() throws Exception {
+        doThrow(new RequestValidationException("Invalid Otp"))
+                .when(mgtService).verifyOtp(any(VerifyOtpRequest.class), any(HttpServletRequest.class));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/verify-otp")
+                .content(objectMapper.writeValueAsString(toVerifyOtpRequest()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_reset_password_SUCCESS() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/auth/reset-password")
+                .content(objectMapper.writeValueAsString(toResetPasswordRequest()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_reset_password_FAILURE() throws Exception {
+        doThrow(new NotFoundException("User not found"))
+                .when(mgtService).resetPassword(any(ResetPasswordRequest.class), any(HttpServletRequest.class), any(HttpServletResponse.class));
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/auth/reset-password")
+                .content(objectMapper.writeValueAsString(toResetPasswordRequest()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void should_refresh_SUCCESS() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/refresh"))
                 .andDo(print())
@@ -106,5 +165,29 @@ public class AuthControllerTest extends BaseIntegrationTest {
         dto.setPassword("daniel@password");
 
         return dto;
+    }
+
+    private VerifyEmailRequest toVerifyEmailRequest(){
+        VerifyEmailRequest request = new VerifyEmailRequest();
+
+        request.setEmail("daniel@daniel.com");
+
+        return request;
+    }
+
+    private VerifyOtpRequest toVerifyOtpRequest(){
+        VerifyOtpRequest request = new VerifyOtpRequest();
+
+        request.setOtp("0123");
+
+        return request;
+    }
+
+    private ResetPasswordRequest toResetPasswordRequest(){
+        ResetPasswordRequest request = new ResetPasswordRequest();
+
+        request.setNewPassword("newPassword");
+
+        return request;
     }
 }

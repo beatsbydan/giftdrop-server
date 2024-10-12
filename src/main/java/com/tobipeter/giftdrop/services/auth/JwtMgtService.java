@@ -20,15 +20,14 @@ import java.util.function.Function;
 @Service
 @Slf4j
 public class JwtMgtService {
-    // USE OPENSSL TO GENERATE A KEY AND SET IT AS ENVIRONMENT VARIABLES.
-    private final String SECRET_KEY = generateSecretKey();
-
-    @Value("${giftrop.security.access-token.expiration}")
+    @Value("${giftdrop.security.access-token.expiration}")
     private long accessTokenExpiration;
-    @Value("${giftrop.security.refresh-token.expiration}")
+    @Value("${giftdrop.security.refresh-token.expiration}")
     private long refreshTokenExpiration;
-    @Value("${giftrop.security.refresh-token.expiration}")
+    @Value("${giftdrop.security.refresh-token.expiration}")
     private long resetTokenExpiration;
+    @Value("${giftdrop.security.secret-key}")
+    private String secretKey;
 
     public String generateAccessToken(UserDetails userDetails){
         return generateAccessToken(new HashMap<>(), userDetails);
@@ -99,13 +98,7 @@ public class JwtMgtService {
     }
 
     private Key getSigningKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    private String generateSecretKey(){
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-        return Encoders.BASE64.encode(key.getEncoded());
     }
 }

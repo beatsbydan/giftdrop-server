@@ -18,7 +18,7 @@ public class UserController {
     private final UserMgtService mgtService;
 
     @PutMapping("{code}")
-    public UserResponse updateUSer(
+    public UserResponse updateUser(
             @RequestBody UpdateUser request,
             @PathVariable String code
     ) throws NotFoundException {
