@@ -186,7 +186,7 @@ public class AuthMgtService implements LogoutHandler {
             log.warn("Logout attempt with invalid Authorization header");
             throw new ForbiddenException("You're not authorized");
         }
-
+        clearCookies(request, response);
         response.setStatus(HttpStatus.OK.value());
         response.getWriter().write(objectMapper.writeValueAsString(new MessageResponse("Logout was successful")));
     }

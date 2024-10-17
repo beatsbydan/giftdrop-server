@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .logoutSuccessHandler(((request, response, authentication) ->
                                 SecurityContextHolder.clearContext())
                         )
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
                         .deleteCookies("refreshToken", "resetToken")
                 )
                 .build();
