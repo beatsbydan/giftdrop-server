@@ -7,6 +7,7 @@ import com.tobipeter.giftdrop.dtos.response.wish.UserWishesResponse;
 import com.tobipeter.giftdrop.dtos.response.wish.WishResponse;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
+import com.tobipeter.giftdrop.exceptions.RequestValidationException;
 import com.tobipeter.giftdrop.services.WishMgtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class WishController {
     @ResponseStatus(HttpStatus.CREATED)
     public List<WishResponse> createWishes(
             @Valid @RequestBody CreateWishList request
-    ) throws NotFoundException, DuplicateEntryException {
+    ) throws NotFoundException, RequestValidationException {
         return wishMgtService.createWishList(request);
     }
 

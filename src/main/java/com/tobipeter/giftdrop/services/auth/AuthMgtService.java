@@ -246,6 +246,8 @@ public class AuthMgtService implements LogoutHandler {
         response.setAddress(currentUser.getAddress());
         response.setBio(currentUser.getBio());
         response.setRole(currentUser.getRole().name());
+        response.setProfileImg(currentUser.getProfileImage());
+        response.setPhone(currentUser.getPhone());
         response.setToken(token);
 
         response.setCanGift(window.isGifting());

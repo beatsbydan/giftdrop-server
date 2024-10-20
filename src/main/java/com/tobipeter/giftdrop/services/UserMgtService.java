@@ -33,14 +33,11 @@ public class UserMgtService {
         return toListResponse(userService.getRankedUsers(pageable));
     }
     private void updateDbModel(UpdateUser request, GiftDropUser existingUser){
-        if(request.getAddress() != null){
-            existingUser.setAddress(request.getAddress());
-        }
         if(request.getBio() != null){
             existingUser.setBio(request.getBio());
         }
-        if(request.getPhone() != null){
-            existingUser.setPhone(request.getPhone());
+        if(request.getProfileImg() != null){
+            existingUser.setProfileImage(request.getProfileImg());
         }
     }
 
@@ -55,6 +52,8 @@ public class UserMgtService {
         response.setAddress(user.getAddress());
         response.setBio(user.getBio());
         response.setRole(user.getRole().name());
+        response.setProfileImg(user.getProfileImage());
+        response.setPhone(user.getPhone());
 
         return response;
     }

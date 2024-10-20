@@ -62,6 +62,8 @@ public class GiftDropUser extends BaseModel implements UserDetails {
 
     private boolean hasWish;
 
+    private String profileImage;
+
     public String generateCode(){
         return "0x" + UUID.randomUUID().toString().substring(0, 5);
     }

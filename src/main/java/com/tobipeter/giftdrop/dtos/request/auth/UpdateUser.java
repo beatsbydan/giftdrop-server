@@ -5,10 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateUser extends CreateUser {
-    private String address;
+public class UpdateUser{
 
     private String bio;
 
-    private String phone;
+    private String profileImg;
+
 }

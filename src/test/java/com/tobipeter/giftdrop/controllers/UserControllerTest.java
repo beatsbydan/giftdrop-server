@@ -59,12 +59,7 @@ public class UserControllerTest extends BaseIntegrationTest {
     private UpdateUser toUserRequestDto (){
         UpdateUser dto = new UpdateUser();
 
-        dto.setFirstName("Daniel");
-        dto.setUserName("beats_by_dan");
-        dto.setEmail("daniel@test.com");
-        dto.setPassword("daniel@password");
-        dto.setRole("GIFT_DROP_USER");
-        dto.setAddress("Address");
+        dto.setProfileImg("profileImg");
         dto.setBio("New Bio");
 
         return dto;

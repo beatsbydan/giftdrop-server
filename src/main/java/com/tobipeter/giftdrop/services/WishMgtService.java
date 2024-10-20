@@ -15,6 +15,7 @@ import com.tobipeter.giftdrop.enums.Category;
 import com.tobipeter.giftdrop.enums.Status;
 import com.tobipeter.giftdrop.exceptions.DuplicateEntryException;
 import com.tobipeter.giftdrop.exceptions.NotFoundException;
+import com.tobipeter.giftdrop.exceptions.RequestValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,13 +34,15 @@ public class WishMgtService {
     private final WishService wishService;
     private final UserService userService;
 
-    public List<WishResponse> createWishList(CreateWishList request) throws NotFoundException, DuplicateEntryException {
-        String userWishingId = request.getWishes()
-                .stream()
-                .findFirst().map(CreateWish::getUserWishingId).orElse(null);
+    public List<WishResponse> createWishList(CreateWishList request) throws NotFoundException, RequestValidationException {
+        GiftDropUser user = userService.getByWishingId(request.getUserWishingId());
+        if(user.isHasWish()){
+            throw new RequestValidationException("You have already made a wish.");
+        }
 
-        GiftDropUser user = userService.getByWishingId(userWishingId);
         user.setHasWish(true);
+        user.setAddress(request.getAddress());
+        user.setPhone(request.getPhone());
         userService.save(user);
 
         return toListResponse(wishService.save(toListWishDBModel(request.getWishes(), user)));
@@ -107,14 +110,10 @@ public class WishMgtService {
         return response;
     }
 
-    private List<Wish> toListWishDBModel(List<CreateWish> wishRequests, GiftDropUser user) throws DuplicateEntryException {
+    private List<Wish> toListWishDBModel(List<CreateWish> wishRequests, GiftDropUser user) {
         List<Wish> newWishList= new ArrayList<>();
 
         for(CreateWish wishRequest : wishRequests){
-            Optional<Wish> wishByName = wishService.findByName(wishRequest.getName());
-            if(wishByName.isPresent()){
-                throw new DuplicateEntryException("Wish already exists");
-            }
             newWishList.add(toWishDBModel(wishRequest, user));
         }
 

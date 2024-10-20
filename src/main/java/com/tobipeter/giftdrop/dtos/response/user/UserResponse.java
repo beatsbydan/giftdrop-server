@@ -28,4 +28,8 @@ public class UserResponse {
 
     private boolean canWish;
 
+    private String profileImg;
+
+    private String phone;
+
 }
