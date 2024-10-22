@@ -59,7 +59,7 @@
     <changeSet id="add_otp_column" author="daniel.onyeachonam" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="users" columnName="user_top"/>
+                <columnExists tableName="users" columnName="user_otp"/>
             </not>
         </preConditions>
         <addColumn tableName="users">
@@ -69,6 +69,21 @@
                     foreignKeyName="fk_otp_on_user"
                     referencedColumnNames="id"
                     referencedTableName="otps"
+                />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add_otp_column" author="daniel.onyeachonam" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="users" columnName="profile_image"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="users">
+            <column name="profile_image" type="MEDIUMTEXT">
+                <constraints
+                    nullable="false"
                 />
             </column>
         </addColumn>

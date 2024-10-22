@@ -66,7 +66,7 @@ public class WishMgtService {
         GiftDropUser user = userService.getByWishingId(wishingId);
         List<WishResponse> userWishes = getWishesByWishingId(wishingId);
 
-        return new ShareWishResponse(user.getBio(), userWishes);
+        return new ShareWishResponse(user.getUsername(), user.getProfileImage(), user.getBio(), userWishes);
     }
 
     public List<WishResponse> getWishesByWishingId(String wishingId){
